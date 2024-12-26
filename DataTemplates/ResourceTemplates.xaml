@@ -1,0 +1,33 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:converters="clr-namespace:BoardGameFrontend.Converters"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Define the DataTemplate for Resource Display -->
+    <converters:CroppedConverter x:Key="CroppedConverter"/>
+    <converters:StringToUriConverter x:Key="StringToUriConverter"/>
+    <DataTemplate x:Key="ResourceTemplate">
+        <StackPanel Orientation="Horizontal"
+                    Margin="5">
+            <StackPanel.ToolTip>
+                <ToolTip Placement="Mouse"
+                         HasDropShadow="True">
+                    <TextBlock>
+                        <Run Text="{Binding Value.ToolTipName}"/>                       
+                        <Run Text=" is: "/>
+                    </TextBlock>
+                </ToolTip>
+            </StackPanel.ToolTip>
+            <Image Width="32"
+                   Height="32">
+                <Image.Source>
+                    <MultiBinding Converter="{StaticResource CroppedConverter}">
+                        <Binding Path="Value.CropRect"/>
+                        <Binding Path="Value.ImagePathString"
+                                 Converter="{StaticResource StringToUriConverter}"/>
+                    </MultiBinding>
+                </Image.Source>
+            </Image>
+            <TextBlock Text="{Binding Value.Amount}"
+                       VerticalAlignment="Center"/>
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>

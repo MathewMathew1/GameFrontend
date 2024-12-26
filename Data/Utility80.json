@@ -1,0 +1,3 @@
+[{"Id" : 1, "NameType" : "ATLAS_TYPY_POLA_1", "IconWidth" : 256, "IconHeight" : 256, "Columns" : 4, "ImagePath" : "pack://application:,,,/Assets/Tiles/TileAtlas.png"},
+{"Id" : 2, "NameType" : "ATLAS_IKONKI_1", "IconWidth" : 128, "IconHeight" : 128, "Columns" : 8, "ImagePath" : "pack://application:,,,/Assets/Atlases/Utility.png"},
+{"Id" : 3, "NameType" : "ATLAS_IKONKI_80_1", "IconWidth" : 80, "IconHeight" : 80, "Columns" : 8, "ImagePath" : "pack://application:,,,/Assets/Atlases/Utility80.png"}]

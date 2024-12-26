@@ -1,0 +1,381 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:BoardGameFrontend.Windows"
+                    xmlns:converters="clr-namespace:BoardGameFrontend.Converters"
+                    xmlns:models="clr-namespace:BoardGameFrontend.Models"
+                    xmlns:helpers="clr-namespace:BoardGameFrontend.Helpers"
+                    xmlns:behaviors="clr-namespace:BoardGameFrontend.Behaviors">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ArtifactTemplate.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    <converters:IsNullConverter x:Key="isNullConverter"/>
+    <converters:PhaseAndMiniPhaseVisibilityConverter x:Key="PhaseAndMiniPhaseVisibilityConverter"/>
+    <converters:CollectionHasItemsConverter x:Key="CollectionHasItemsConverter"/>
+    <converters:ContainsStringConverter x:Key="ContainsStringConverter"/>
+
+    <DataTemplate x:Key="Artifacts">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Grid
+                HorizontalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <StackPanel Orientation="Horizontal">
+                        <local:StackCardHolder Number="{Binding DataContext.Game.ArtifactManager.NumberOfLeftArtifacts, 
+                                      RelativeSource={RelativeSource AncestorType=Window}}"
+                                               BackgroundColor="LightBlue"
+                                               TextColor="White"/>
+                        <local:StackCardHolder Number="{Binding DataContext.Game.ArtifactManager.NumberOfTossedArtifacts, 
+                                      RelativeSource={RelativeSource AncestorType=Window}}"
+                                               BackgroundColor="LightBlue"
+                                               TextColor="White"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid VerticalAlignment="Top"
+                      HorizontalAlignment="Stretch"
+                      Grid.Row="1"
+                      Height="460"
+                      Background="Transparent">
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"/>
+                            <Style.Triggers>
+                                <!-- Use MultiBinding with the converter to combine conditions -->
+                                <DataTrigger Value="Visible">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource PhaseAndMiniPhaseVisibilityConverter}">
+                                            <Binding Path="DataContext.Game.IsUserControlledPlayersTurn"
+                                                     RelativeSource="{RelativeSource AncestorType=Window}"/>
+                                            <Binding Path="DataContext.Game.PhaseManager.CurrentPhase.Name"
+                                                     RelativeSource="{RelativeSource AncestorType=Window}"/>
+                                            <Binding Path="DataContext.Game.MiniPhaseManager.CurrentPhase"
+                                                     RelativeSource="{RelativeSource AncestorType=Window}"/>
+                                            <Binding Path="DataContext.Game.ArtifactManager.ArtifactsToPickFrom"
+                                                     RelativeSource="{RelativeSource AncestorType=Window}"/>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Visibility"
+                                            Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <Border Background="DarkSlateGray"
+                                CornerRadius="10"
+                                Padding="10"
+                                Margin="5,0,5,5"
+                                BorderBrush="LightGray"
+                                BorderThickness="2">
+                            <TextBlock Text="{Binding DataContext.Game.ArtifactManager.PickText, RelativeSource={RelativeSource AncestorType=Window}}"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       TextAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="Black"
+                                                      BlurRadius="5"
+                                                      ShadowDepth="2"
+                                                      Opacity="0.7"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1">
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding DataContext.Game.ArtifactManager.ArtifactsToPickFrom, RelativeSource={RelativeSource AncestorType=Window}}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel HorizontalAlignment="Center"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="5">
+                                            <ContentPresenter Content="{Binding}"
+                                                              ContentTemplate="{StaticResource ArtifactTemplate}"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+
+                        <StackPanel HorizontalAlignment="Center"
+                                    Orientation="Horizontal">
+
+
+                            <Button Content="Take Artifacts"
+                                    CommandParameter="{Binding DataContext.LobbyService, RelativeSource={RelativeSource AncestorType=Window}}"
+                                    Command="{Binding DataContext.Game.ArtifactManager.TakeArtifactsCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                    Margin="10,0,0,0">
+                                <Button.Style>
+                                    <Style TargetType="Button"
+                                           BasedOn="{StaticResource StyledButton}">
+                                        <Setter Property="IsEnabled"
+                                                Value="False"/>
+                                        <Style.Triggers>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding DataContext.Game.ArtifactManager.SelectedCorrectNumberOfArtifacts, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                               Value="True"/>
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="IsEnabled"
+                                                        Value="True"/>
+                                            </MultiDataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+
+                </Grid>
+                <Grid VerticalAlignment="Top"
+                      HorizontalAlignment="Stretch"
+                      Grid.Row="1"
+                      Background="Transparent">
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"/>
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding DataContext.Game.IsUserControlledPlayersTurn, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                   Value="False"/>
+                                        <Condition Binding="{Binding DataContext.Game.PhaseManager.CurrentPhase.Name, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                   Value="{x:Static models:PhaseType.ArtifactPhase}"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility"
+                                            Value="Visible"/>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <Border
+                        Background="DarkSlateGray"
+                        CornerRadius="10"
+                        Padding="10"
+                        Margin="5"
+                        BorderBrush="LightGray"
+                        BorderThickness="2">
+                        <TextBlock FontSize="24"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   TextAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} is picking artifacts">
+                                    <Binding Path="DataContext.Game.CurrentPlayer.Name"
+                                             RelativeSource="{RelativeSource AncestorType=Window}"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="Black"
+                                                  BlurRadius="5"
+                                                  ShadowDepth="2"
+                                                  Opacity="0.7"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                    </Border>
+                </Grid>
+                <Canvas VerticalAlignment="Top"
+                        Grid.Row="2"
+                        Canvas.ZIndex="10"
+                        HorizontalAlignment="Center"
+                        Background="Transparent">
+
+                    <ContentControl
+                        Width="300"
+                        Height="300"
+                        Canvas.ZIndex="10"
+                        Canvas.Left="50"
+                        Canvas.Top="-100">
+                        <ContentControl.Style>
+                            <Style TargetType="ContentControl">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DataContext.Game.ArtifactManager.ShowChooseOne, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                 Value="True">
+                                        <Setter Property="Visibility"
+                                                Value="Visible"/>
+                                        <Setter Property="ContentTemplate">
+                                            <Setter.Value>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <!-- Custom Component inside the Grid -->
+                                                        <local:ChooseOne
+                                                            ImagePath="{Binding DataContext.Game.ArtifactManager.SelectedArtifact.EffectMercenaryType.ImagePathString, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            CropRect="{Binding DataContext.Game.ArtifactManager.SelectedArtifact.EffectMercenaryType.CropRect, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            CommandFunction="{Binding DataContext.Game.ArtifactManager.PlayArtifactWithChooseOneCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            CancelCommand="{Binding DataContext.Game.ArtifactManager.CancelChoseOneCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
+
+                </Canvas>
+                <StackPanel Orientation="Vertical"
+                            Grid.Row="2"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch">
+                    <StackPanel VerticalAlignment="Bottom">
+                        <Border
+                            Background="DarkSlateGray"
+                            CornerRadius="10"
+                            Padding="10"
+                            Margin="5"
+                            BorderBrush="LightGray"
+                            BorderThickness="2">
+                            <TextBlock Text="Your Artifacts"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       TextAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="Black"
+                                                      BlurRadius="5"
+                                                      ShadowDepth="2"
+                                                      Opacity="0.7"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                        </Border>
+
+                        <ScrollViewer
+                            VerticalScrollBarVisibility="Disabled"
+                            HorizontalScrollBarVisibility="Auto"
+                            VerticalAlignment="Bottom">
+                            <ItemsControl ItemsSource="{Binding DataContext.Game.UserControlledPlayer.Artifacts , RelativeSource={RelativeSource AncestorType=Window}}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel HorizontalAlignment="Center"
+                                                   VerticalAlignment="Bottom"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <local:ArtifactTemplateInYourHand
+                                            AlreadyPlayed="False"
+                                            SelectCommand="{Binding DataContext.Game.ArtifactManager.SelectArtifactToPlayCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            Artifact="{Binding}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2"
+                                HorizontalAlignment="Center"
+                                Orientation="Horizontal">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding DataContext.Game.IsUserControlledPlayersTurn, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                       Value="True"/>
+                                            <Condition Binding="{Binding DataContext.Game.PhaseManager.CurrentPhase.Name, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                       Value="{x:Static models:PhaseType.ArtifactPhase}"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Visibility"
+                                                Value="Visible"/>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <Button Content="Play Artifact"
+                                CommandParameter="{Binding DataContext.LobbyService, RelativeSource={RelativeSource AncestorType=Window}}"
+                                Command="{Binding DataContext.Game.ArtifactManager.PlayArtifactCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                Margin="10,0,0,0">
+                            <Button.Style>
+                                <Style TargetType="Button"
+                                       BasedOn="{StaticResource StyledButton}">
+                                    <Setter Property="IsEnabled"
+                                            Value="False"/>
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.Game.ArtifactManager.SelectedArtifact, Converter={StaticResource isNullConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                           Value="False"/>
+                                                <Condition Binding="{Binding DataContext.Game.ArtifactManager.SelectedArtifact.ArtifactPlayProperties.CanPlayCard, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                           Value="True"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="IsEnabled"
+                                                    Value="True"/>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+
+                        </Button>
+                        <Button Content="Reroll Artifact"
+                                CommandParameter="{Binding DataContext.LobbyService, RelativeSource={RelativeSource AncestorType=Window}}"
+                                Command="{Binding DataContext.Game.ArtifactManager.RerollArtifactCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                Margin="10,0,0,0">
+                            <Button.Style>
+                                <Style TargetType="Button"
+                                       BasedOn="{StaticResource StyledButton}">
+                                    <Setter Property="IsEnabled"
+                                            Value="False"/>
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.Game.ArtifactManager.SelectedArtifact, Converter={StaticResource isNullConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                           Value="False"/>
+                                                <Condition Binding="{Binding DataContext.Game.PlayerManager.SelectedPlayer.BoolAdditionalStorage, 
+                    Converter={StaticResource ContainsStringConverter}, 
+                    ConverterParameter={x:Static models:BoolHelper.EXTRA_REROLL_PLAYED},
+                    RelativeSource={RelativeSource AncestorType=Window}}"
+                                                           Value="False"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="IsEnabled"
+                                                    Value="True"/>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <Button Content="Do nothing"
+                                Command="{Binding DataContext.LobbyService.SkipArtifactPhaseCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                Margin="10,0,0,0">
+                            <Button.Style>
+                                <Style TargetType="Button"
+                                       BasedOn="{StaticResource StyledButton}">
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </DataTemplate>
+
+</ResourceDictionary>

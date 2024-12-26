@@ -1,0 +1,4 @@
+[{"Id" : 1, "NameType" : "Natychmiastowy", "IconAtlas" : "ATLAS_IKONKI_1", "IconIndex" : 40},
+{"Id" : 2, "NameType" : "Trwały", "IconAtlas" : "ATLAS_IKONKI_1", "IconIndex" : 39},
+{"Id" : 3, "NameType" : "KoniecGry", "IconAtlas" : "ATLAS_IKONKI_1", "IconIndex" : 38},
+{"Id" : 4, "NameType" : "ModifierRuchu", "IconAtlas" : "ATLAS_IKONKI_1", "IconIndex" : 41}]

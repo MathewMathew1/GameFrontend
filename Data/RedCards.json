@@ -1,0 +1,3 @@
+[{"Id" : 1, "NameType" : "Najemnik", "IconAtlas" : "ATLAS_IKONKI_1", "IconIndex" : 16},
+{"Id" : 2, "NameType" : "Budynek", "IconAtlas" : "ATLAS_IKONKI_1", "IconIndex" : 17},
+{"Id" : 3, "NameType" : "Przepowiednia", "IconAtlas" : "ATLAS_IKONKI_1", "IconIndex" : 14}]

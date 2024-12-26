@@ -1,0 +1,122 @@
+<UserControl x:Class="BoardGameFrontend.Windows.ChooseOne"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:BoardGameFrontend.Converters"
+             xmlns:local="clr-namespace:BoardGameFrontend.Windows"
+             Height="300"
+             Width="200">
+    <UserControl.Resources>
+        <converters:CroppedConverter x:Key="CroppedConverter"/>
+        <converters:StringToUriConverter x:Key="StringToUriConverter"/>
+        <converters:TupleConverter x:Key="TupleConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <!-- Image with two buttons on top and bottom -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Image Container -->
+        <Grid Grid.Row="0"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal"
+                        Background="Black"
+                        Opacity="0.5"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"/>
+            <Image Width="200"
+                   Height="200">
+                <Image.Source>
+                    <MultiBinding Converter="{StaticResource CroppedConverter}">
+                        <Binding Path="CropRect"
+                                 RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                        <Binding Path="ImagePath"
+                                 RelativeSource="{RelativeSource AncestorType=UserControl}"
+                                 Converter="{StaticResource StringToUriConverter}"/>
+                    </MultiBinding>
+                </Image.Source>
+            </Image>
+
+            <!-- Buttons over the image -->
+            <Grid>
+                <!-- Top Button (Covers the top half of the image) -->
+                <Button x:Name="TopButton"
+                        Content=""
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Top"
+                        Width="200"
+                        Height="100"
+                        Background="Transparent"
+                        BorderThickness="5"
+                        Click="TopButton_Click">
+                    <!-- Add click event -->
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="BorderBrush"
+                                    Value="Transparent"/>
+                            <Style.Triggers>
+                                <!-- Show green border when FirstEffect is true -->
+                                <DataTrigger Binding="{Binding FirstEffect, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                             Value="true">
+                                    <Setter Property="BorderBrush"
+                                            Value="Green"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <!-- Bottom Button (Covers the bottom half of the image) -->
+                <Button x:Name="BottomButton"
+                        Content=""
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Bottom"
+                        Width="200"
+                        Height="100"
+                        Background="Transparent"
+                        BorderThickness="5"
+                        Click="BottomButton_Click">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="BorderBrush"
+                                    Value="Transparent"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding FirstEffect, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                             Value="false">
+                                    <Setter Property="BorderBrush"
+                                            Value="Green"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
+        </Grid>
+
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="10">
+            <Button Content="Cancel"
+                    Command="{Binding CancelCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    Width="70"
+                    Margin="10,0"/>
+            <Button Content="Accept"
+                    Command="{Binding CommandFunction, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    Width="70"
+                    Margin="10,0">
+                <Button.CommandParameter>
+                    <MultiBinding Converter="{StaticResource TupleConverter}">
+                        <Binding Path="LobbyService"
+                                RelativeSource="{RelativeSource AncestorType=Window}"/>
+                        <Binding Path="FirstEffect"
+                                RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                        
+                    </MultiBinding>
+                </Button.CommandParameter>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

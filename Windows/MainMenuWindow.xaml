@@ -1,0 +1,21 @@
+<local:FullScreenWindow x:Class="BoardGameFrontend.MainMenuWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:local="clr-namespace:BoardGameFrontend.Windows"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Main Menu" Height="400" Width="600">
+    <Grid>
+        <TextBlock Text="Game Menu"
+                   FontSize="24"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Top"
+                   Margin="0,10,0,0"/>
+
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    >
+            <Button Content="Instructions" Width="150" Click="NavigateToInstructions"/>
+            <Button Content="Options" Width="150" Click="NavigateToOptions"/>
+            <Button Content="Music" Width="150" Click="NavigateToMusic"/>
+        </StackPanel>
+    </Grid>
+</local:FullScreenWindow>

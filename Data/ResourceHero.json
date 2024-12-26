@@ -1,0 +1,4 @@
+[{"Id" : 1, "Name" : "Siege", "IconAtlas" : "ATLAS_IKONKI_1", "IconIndex" : 0},
+{"Id" : 2, "Name" : "Army", "IconAtlas" : "ATLAS_IKONKI_1", "IconIndex" : 1},
+{"Id" : 3, "Name" : "Magic", "IconAtlas" : "ATLAS_IKONKI_1", "IconIndex" : 2},
+{"Id" : 3, "Name" : "Signet", "IconAtlas" : "ATLAS_IKONKI_1", "IconIndex" : 43}]

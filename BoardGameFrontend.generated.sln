@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGameFrontend", "BoardGameFrontend.csproj", "{3453731E-1E7E-4548-BC13-F0393C904109}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardGameBackend", "..\BoardGameBackend\BoardGameBackend.csproj", "{760D48C6-E874-4733-98D6-AA3970424B45}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3453731E-1E7E-4548-BC13-F0393C904109}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3453731E-1E7E-4548-BC13-F0393C904109}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3453731E-1E7E-4548-BC13-F0393C904109}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3453731E-1E7E-4548-BC13-F0393C904109}.Release|Any CPU.Build.0 = Release|Any CPU
+		{760D48C6-E874-4733-98D6-AA3970424B45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{760D48C6-E874-4733-98D6-AA3970424B45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{760D48C6-E874-4733-98D6-AA3970424B45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{760D48C6-E874-4733-98D6-AA3970424B45}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {82CD8F68-3691-40E4-AC9B-CF93E2B726D9}
+	EndGlobalSection
+EndGlobal

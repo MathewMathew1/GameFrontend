@@ -1,0 +1,298 @@
+<Window x:Class="BoardGameFrontend.Windows.ScoreWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters="clr-namespace:BoardGameFrontend.Converters"
+        Title="Score Points"
+        Height="500"
+        Width="1200">
+    <Window.Resources>
+        <!-- Define your converters -->
+        <converters:HeroWholeCropConverter x:Key="HeroWholeCropConverter"/>
+        <converters:CroppedConverter x:Key="CroppedConverter"/>
+        <converters:StringToUriConverter x:Key="StringToUriConverter"/>
+        <converters:HeroCropConverter x:Key="HeroCropConverter"/>
+        <converters:HeroCropImageConverter x:Key="HeroCropImageConverter"/>
+
+        <!-- Define your styles -->
+        <Style x:Key="TableCellStyle"
+               TargetType="TableCell">
+            <Setter Property="BorderBrush"
+                    Value="Black"/>
+            <Setter Property="BorderThickness"
+                    Value="1"/>
+            <Setter Property="Padding"
+                    Value="5"/>
+            <Setter Property="TextAlignment"
+                    Value="Center"/>
+        </Style>
+
+        <Style x:Key="TableRowStyle"
+               TargetType="TableRow">
+            <Setter Property="Background"
+                    Value="LightGoldenrodYellow"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <FlowDocumentReader ViewingMode="Scroll"
+                            Width="1200"
+                            VerticalAlignment="Stretch">
+            <FlowDocument>
+
+                <Table
+                    Name="PlayerScoreTableRows">
+
+                    <Table.Columns>
+                        <TableColumn Background="#c084f9"
+                                Width="Auto"/>
+                        <TableColumn Background="#c084f9"
+                                Width="80"/>
+                        <TableColumn Background="#f5d278"
+                                Width="80"/>
+                        <TableColumn Width="80"/>
+                        <TableColumn Width="80"/>
+                        <TableColumn Width="80"/>
+                        <TableColumn Width="80"/>
+                        <TableColumn Width="80"/>
+                        <TableColumn Width="80"/>
+                        <TableColumn Width="80"/>
+                        <TableColumn Width="80"/>
+                        <TableColumn Width="80"/>
+                        <TableColumn Background="#d4d4d4"
+                                Width="80"/>
+                    </Table.Columns>
+
+                    <TableRowGroup>
+
+                        <TableRow Style="{StaticResource TableRowStyle}"
+                                  Background="LightGoldenrodYellow">
+                            <TableCell Style="{StaticResource TableCellStyle}"
+                                    TextAlignment="Center">
+                                <Paragraph FontSize="14pt"
+                                           FontWeight="Bold">Player</Paragraph>
+                            </TableCell>
+
+                            <TableCell Style="{StaticResource TableCellStyle}"
+                                       ColumnSpan="1"
+                                       TextAlignment="Center">
+                                <BlockUIContainer>
+                                    <Image Width="64"
+                                           Height="64">
+                                        <Image.Source>
+                                            <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropConverter}"
+                                                         ConverterParameter="ScorePoints"/>
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropImageConverter}"
+                                                         ConverterParameter="ScorePoints"/>
+                                            </MultiBinding>
+                                        </Image.Source>
+                                    </Image>
+                                </BlockUIContainer>
+                            </TableCell>
+                            <TableCell Style="{StaticResource TableCellStyle}"
+                                       ColumnSpan="1"
+                                       TextAlignment="Center">
+                                <BlockUIContainer>
+                                    <Image Width="64"
+                                           Height="64">
+                                        <Image.Source>
+                                            <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropConverter}"
+                                                         ConverterParameter="Morale"/>
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropImageConverter}"
+                                                         ConverterParameter="Morale"/>
+                                            </MultiBinding>
+                                        </Image.Source>
+                                    </Image>
+                                </BlockUIContainer>
+                            </TableCell>
+                            <TableCell Style="{StaticResource TableCellStyle}"
+                                       ColumnSpan="1"
+                                       TextAlignment="Center">
+                                <BlockUIContainer>
+                                    <Image Width="64"
+                                           Height="64">
+                                        <Image.Source>
+                                            <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropConverter}"
+                                                         ConverterParameter="Army"/>
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropImageConverter}"
+                                                         ConverterParameter="Army"/>
+                                            </MultiBinding>
+                                        </Image.Source>
+                                    </Image>
+                                </BlockUIContainer>
+                            </TableCell>
+                            <TableCell Style="{StaticResource TableCellStyle}"
+                                       ColumnSpan="1"
+                                       TextAlignment="Center">
+                                <BlockUIContainer>
+                                    <Image Width="64"
+                                           Height="64">
+                                        <Image.Source>
+                                            <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropConverter}"
+                                                         ConverterParameter="Siege"/>
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropImageConverter}"
+                                                         ConverterParameter="Siege"/>
+                                            </MultiBinding>
+                                        </Image.Source>
+                                    </Image>
+                                </BlockUIContainer>
+                            </TableCell>
+                            <TableCell Style="{StaticResource TableCellStyle}"
+                                       ColumnSpan="1"
+                                       TextAlignment="Center">
+                                <BlockUIContainer>
+                                    <Image Width="64"
+                                           Height="64">
+                                        <Image.Source>
+                                            <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropConverter}"
+                                                         ConverterParameter="Magic"/>
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropImageConverter}"
+                                                         ConverterParameter="Magic"/>
+                                            </MultiBinding>
+                                        </Image.Source>
+                                    </Image>
+                                </BlockUIContainer>
+                            </TableCell>
+                            <TableCell Style="{StaticResource TableCellStyle}"
+                                       ColumnSpan="1"
+                                       TextAlignment="Center">
+                                <BlockUIContainer>
+                                    <Image Width="64"
+                                           Height="64">
+                                        <Image.Source>
+                                            <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropConverter}"
+                                                         ConverterParameter="Mercenary"/>
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropImageConverter}"
+                                                         ConverterParameter="Mercenary"/>
+                                            </MultiBinding>
+                                        </Image.Source>
+                                    </Image>
+                                </BlockUIContainer>
+                            </TableCell>
+                            <TableCell Style="{StaticResource TableCellStyle}"
+                                       ColumnSpan="1"
+                                       TextAlignment="Center">
+                                <BlockUIContainer>
+                                    <Image Width="64"
+                                           Height="64">
+                                        <Image.Source>
+                                            <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropConverter}"
+                                                         ConverterParameter="Oracle"/>
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropImageConverter}"
+                                                         ConverterParameter="Oracle"/>
+                                            </MultiBinding>
+                                        </Image.Source>
+                                    </Image>
+                                </BlockUIContainer>
+                            </TableCell>
+                            <TableCell Style="{StaticResource TableCellStyle}"
+                                       ColumnSpan="1"
+                                       TextAlignment="Center">
+                                <BlockUIContainer>
+                                    <Image Width="64"
+                                           Height="64">
+                                        <Image.Source>
+                                            <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropConverter}"
+                                                         ConverterParameter="Hero"/>
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropImageConverter}"
+                                                         ConverterParameter="Hero"/>
+                                            </MultiBinding>
+                                        </Image.Source>
+                                    </Image>
+                                </BlockUIContainer>
+                            </TableCell>
+
+                            <TableCell Style="{StaticResource TableCellStyle}"
+                                       ColumnSpan="1"
+                                       TextAlignment="Center">
+                                <BlockUIContainer>
+                                    <Image Width="64"
+                                           Height="64">
+                                        <Image.Source>
+                                            <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropConverter}"
+                                                         ConverterParameter="Artifact"/>
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropImageConverter}"
+                                                         ConverterParameter="Artifact"/>
+                                            </MultiBinding>
+                                        </Image.Source>
+                                    </Image>
+                                </BlockUIContainer>
+                            </TableCell>
+                            <TableCell Style="{StaticResource TableCellStyle}"
+                                       ColumnSpan="1"
+                                       TextAlignment="Center">
+                                <BlockUIContainer>
+                                    <Image Width="64"
+                                           Height="64">
+                                        <Image.Source>
+                                            <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropConverter}"
+                                                         ConverterParameter="TokenBg"/>
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropImageConverter}"
+                                                         ConverterParameter="TokenBg"/>
+                                            </MultiBinding>
+                                        </Image.Source>
+                                    </Image>
+                                </BlockUIContainer>
+                            </TableCell>
+                            <TableCell Style="{StaticResource TableCellStyle}"
+                                       ColumnSpan="1"
+                                       TextAlignment="Center">
+                                <BlockUIContainer>
+                                    <Image Width="64"
+                                           Height="64">
+                                        <Image.Source>
+                                            <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropConverter}"
+                                                         ConverterParameter="RoyalCard"/>
+                                                <Binding Path="."
+                                                         Converter="{StaticResource HeroCropImageConverter}"
+                                                         ConverterParameter="RoyalCard"/>
+                                            </MultiBinding>
+                                        </Image.Source>
+                                    </Image>
+                                </BlockUIContainer>
+                            </TableCell>
+                            <TableCell Style="{StaticResource TableCellStyle}"
+                                    TextAlignment="Center">
+                                <Paragraph FontSize="14pt"
+                                           FontWeight="Bold">Time</Paragraph>
+                            </TableCell>
+                        </TableRow>
+
+
+                    </TableRowGroup>
+                </Table>
+            </FlowDocument>
+        </FlowDocumentReader>
+    </Grid>
+</Window>
+

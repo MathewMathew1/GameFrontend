@@ -1,0 +1,232 @@
+﻿<local:FullScreenWindow x:Class="BoardGameFrontend.MainViewWindow"
+                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:local="clr-namespace:BoardGameFrontend.Windows"
+                        Title="MainViewWindow"
+                        Height="650"
+                        Width="525">
+        <Grid Width="Auto"
+              HorizontalAlignment="Left">
+                <Grid.RowDefinitions>
+                        <!-- Row for the Header and Table -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Row for the Controls below the table -->
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0"
+                      Width="Auto"
+                      HorizontalAlignment="Left"
+                      Margin="10">
+                        <Grid.RowDefinitions>
+                                <!-- Row for the Header and Table -->
+                                <RowDefinition Height="Auto"/>
+                                <!-- Row for the Controls below the table -->
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <!-- Header Row -->
+                        <Grid Margin="10, 0, 0, 0"
+                              Grid.Row="0"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top">
+                                <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="300"/>
+                                        <ColumnDefinition Width="200"/>
+                                        <ColumnDefinition Width="200"/>
+                                        <ColumnDefinition Width="80"/>
+                                        <ColumnDefinition Width="80"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Wrap TextBlock in Border -->
+                                <Border BorderBrush="Black"
+                                        BorderThickness="1"
+                                        Padding="5">
+                                        <TextBlock Text="Lobby ID"
+                                                   TextAlignment="Center"
+                                                   FontWeight="Bold"
+                                                   Grid.Column="0"/>
+                                </Border>
+                                <Border BorderBrush="Black"
+                                        BorderThickness="1"
+                                        Padding="5"
+                                        Grid.Column="1">
+                                        <TextBlock TextAlignment="Center"
+                                                   Text="Lobby Name"
+                                                   FontWeight="Bold"/>
+                                </Border>
+                                <Border BorderBrush="Black"
+                                        BorderThickness="1"
+                                        Padding="5"
+                                        Grid.Column="2">
+                                        <TextBlock TextAlignment="Center"
+                                                   Text="Host Name"
+                                                   FontWeight="Bold"/>
+                                </Border>
+                                <Border BorderBrush="Black"
+                                        BorderThickness="1"
+                                        Padding="5"
+                                        Grid.Column="3">
+                                        <TextBlock Text="Players"
+                                                   TextAlignment="Center"
+                                                   FontWeight="Bold"/>
+                                </Border>
+                                <Border BorderBrush="Black"
+                                        BorderThickness="1"
+                                        Padding="5"
+                                        Grid.Column="4">
+                                        <TextBlock TextAlignment="Center"
+                                                   Text="Join"/>
+                                </Border>
+
+                        </Grid>
+
+                        <Grid Margin="10, 0, 0, 0"
+                              Grid.Row="1"
+                              Background="#F0F0F0"
+                              Height="300"
+                              VerticalAlignment="Stretch"
+                              HorizontalAlignment="Stretch">
+                                <Border BorderBrush="Black"
+                                        BorderThickness="1,1,1,1">
+                                        <ItemsControl x:Name="LobbiesListBox"
+                                                      Margin="0,0,0,0">
+                                                <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                                <Grid>
+                                                                        <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition Width="299"/>
+                                                                                <ColumnDefinition Width="200"/>
+                                                                                <ColumnDefinition Width="200"/>
+                                                                                <ColumnDefinition Width="80"/>
+                                                                                <ColumnDefinition Width="79"/>
+                                                                        </Grid.ColumnDefinitions>
+
+                                                                        <!-- Wrap TextBlock in Border -->
+                                                                        <Border BorderBrush="Black"
+                                                                                BorderThickness="0,0,1,1"
+                                                                                Padding="5">
+                                                                                <TextBlock Text="{Binding Id}"
+                                                                                           Grid.Column="0"/>
+                                                                        </Border>
+                                                                        <Border BorderBrush="Black"
+                                                                                BorderThickness="0,0,1,1"
+                                                                                Padding="5"
+                                                                                Grid.Column="1">
+                                                                                <TextBlock Text="{Binding LobbyName}"/>
+                                                                        </Border>
+                                                                        <Border BorderBrush="Black"
+                                                                                BorderThickness="0,0,1,1"
+                                                                                Padding="5"
+                                                                                Grid.Column="2">
+                                                                                <TextBlock Text="{Binding HostName}"/>
+                                                                        </Border>
+                                                                        <Border BorderBrush="Black"
+                                                                                BorderThickness="0,0,1,1"
+                                                                                Padding="5"
+                                                                                Grid.Column="3">
+                                                                                <StackPanel Orientation="Horizontal">
+                                                                                        <TextBlock Text="{Binding Players.Count}"/>
+                                                                                        <TextBlock Text="/4"/>
+                                                                                </StackPanel>
+                                                                        </Border>
+                                                                        <Border BorderBrush="Black"
+                                                                                BorderThickness="0,0,0,1"
+                                                                                Padding="5"
+                                                                                Grid.Column="4">
+                                                                                <Button Content="Join"
+                                                                                        Grid.Column="3"
+                                                                                        Click="JoinLobby_Click"
+                                                                                        CommandParameter="{Binding Id}"
+                                                                                        Width="80"
+                                                                                        HorizontalAlignment="Right"/>
+                                                                        </Border>
+                                                                </Grid>
+                                                        </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                </Border>
+
+                        </Grid>
+                        <Button  Grid.Row="3"
+                                 Content="Refresh Lobbies"
+                                 HorizontalAlignment="Left"
+                                 VerticalAlignment="Bottom"
+                                 Width="100"
+                                 Margin="10,10,0,0"
+                                 Click="RefreshLobbies_Click"/>
+                </Grid>
+                <StackPanel Grid.Row="1"
+                            Margin="10">
+                        <TextBox x:Name="PlayerNameBox"
+                                        KeyDown="InputTextBox_KeyDown"
+                                 Margin="10"/>
+                        <TextBlock x:Name="UsernameBlock"
+                                   Width="300"
+                                   VerticalAlignment="Center"/>
+                        <Button Content="Create Lobby"
+                                Click="CreateLobby_Click"
+                                Margin="10"/>
+                </StackPanel>
+                <StackPanel Grid.Row="2">
+                        <ItemsControl x:Name="YourLobbiesListBox"
+                                      Margin="0,0,0,0">
+                                <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                                <Grid Margin="10"
+                                                                VerticalAlignment="Center"
+                                                                HorizontalAlignment="Center"
+                                                                Background="#f2f2f2"
+                                                               
+                                                               >
+                                                        <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <TextBlock Grid.Column="0"
+                                                                        Text="{Binding LobbyName}"
+                                                                   FontSize="16"
+                                                                        FontWeight="Bold"
+                                                                        Foreground="#333"
+                                                                   VerticalAlignment="Center"
+                                                                        Margin="10,0"/>
+
+                                                        <Button Grid.Column="1"
+                                                                        Content="ReJoin"
+                                                                
+                                                                Click="JoinLobby_Click"
+                                                                CommandParameter="{Binding Id}"
+                                                                HorizontalAlignment="Right"
+                                                                Foreground="White"
+                                                                Background="Green"
+                                                                Padding="8,4"
+                                                                Margin="10,0"
+                                                                FontWeight="SemiBold"
+                                                                Width="100"/>
+
+                                                        <Button Grid.Column="2"
+                                                                        Content="Leave Lobby"
+                                                              
+                                                                Click="LeaveLobby_Click"
+                                                                CommandParameter="{Binding Id}"
+                                                                HorizontalAlignment="Right"
+                                                                Foreground="White"
+                                                                Background="Red"
+                                                                Padding="8,4"
+                                                                Margin="10,0"
+                                                                FontWeight="SemiBold"
+                                                                Width="100"/>
+                                                </Grid>
+
+                                        </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                </StackPanel>
+                <StackPanel Grid.Row="3">
+                         <Button Content="Instructions" Width="150" Click="NavigateToInstructions"/>
+                </StackPanel>
+        </Grid>
+</local:FullScreenWindow>

@@ -1,0 +1,488 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:BoardGameFrontend.Windows"
+                    xmlns:models="clr-namespace:BoardGameFrontend.Models"
+                    xmlns:converters="clr-namespace:BoardGameFrontend.Converters">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ArtifactTemplate.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    <converters:CroppedConverter x:Key="CroppedConverter"/>
+    <converters:HeroCropConverter x:Key="HeroCropConverter"/>
+    <converters:HeroCropImageConverter x:Key="HeroCropImageConverter"/>
+    <converters:IsNullConverter x:Key="isNullConverter"/>
+    <converters:NotEqualConverter x:Key="NotEqualConverter"/>
+
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+    <DataTemplate x:Key="YourCards">
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto">
+            <Grid VerticalAlignment="Stretch"
+                  HorizontalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Vertical"
+                            Grid.Row="0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch">
+                    <StackPanel>
+                        <Border
+                            Background="DarkSlateGray"
+                            CornerRadius="10"
+                            Padding="10"
+                            Margin="5"
+                            BorderBrush="LightGray"
+                            BorderThickness="2">
+                            <TextBlock Text="Mercenaries"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       TextAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="Black"
+                                                      BlurRadius="5"
+                                                      ShadowDepth="2"
+                                                      Opacity="0.7"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <ItemsControl ItemsSource="{Binding DataContext.Game.PlayerManager.SelectedPlayer.PlayerMercenariesManager.Mercenaries, 
+                                        RelativeSource={RelativeSource AncestorType=Window}}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel HorizontalAlignment="Center"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="5">
+                                        <Grid Grid.Column="2"
+                                              Width="120">
+                                            <Viewbox Stretch="Uniform">
+                                                <StackPanel>
+                                                    <local:MercenaryTemplate
+                                                        IsYourCard="True"
+                                                        SelectCommand="{Binding DataContext.Game.UserControlledPlayer.PlayerMercenariesManager.SelectMercenaryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        Mercenary="{Binding}"/>
+                                                </StackPanel>
+                                            </Viewbox>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <StackPanel>
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.Game.IsUserControlledPlayersTurn, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                           Value="True"/>
+                                                <Condition Binding="{Binding DataContext.Game.MiniPhaseManager.CurrentPhase.Name, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                           Value="{x:Static models:MiniPhaseType.FulfilProphecyPhase}"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Visibility"
+                                                    Value="Visible"/>
+                                        </MultiDataTrigger>
+
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <Button Content="Set prophecy"
+                                    CommandParameter="{Binding DataContext.Game.UserControlledPlayer.PlayerMercenariesManager.SelectedMercenary.InGameIndex, RelativeSource={RelativeSource AncestorType=Window}}"
+                                    Command="{Binding DataContext.LobbyService.FulfillMercenaryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                    Margin="10,0,0,0">
+                                <Button.Style>
+                                    <Style TargetType="Button"
+                                           BasedOn="{StaticResource StyledButton}">
+                                        <Setter Property="IsEnabled"
+                                                Value="False"/>
+                                        <Style.Triggers>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding DataContext.Game.UserControlledPlayer.PlayerMercenariesManager.SelectedMercenary.TypeCard, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                               Value="3"/>
+
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="IsEnabled"
+                                                        Value="True"/>
+                                            </MultiDataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Vertical"
+                            Grid.Row="1"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch">
+                    <StackPanel>
+                        <Border
+                            Background="DarkSlateGray"
+                            CornerRadius="10"
+                            Padding="10"
+                            Margin="5"
+                            BorderBrush="LightGray"
+                            BorderThickness="2">
+                            <TextBlock Text="Artifacts Played"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       TextAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="Black"
+                                                      BlurRadius="5"
+                                                      ShadowDepth="2"
+                                                      Opacity="0.7"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                        </Border>
+                    </StackPanel>
+                    <Canvas VerticalAlignment="Top"
+                            Grid.Row="2"
+                            Canvas.ZIndex="10"
+                            HorizontalAlignment="Stretch"
+                            Background="Transparent">
+
+                        <ContentControl
+                            Width="300"
+                            Height="300"
+                            Canvas.ZIndex="10"
+                            Canvas.Left="0"
+                            Canvas.Top="-100">
+                            <ContentControl.Style>
+                                <Style TargetType="ContentControl">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DataContext.Game.PlayerManager.SelectedPlayer.PlayerArtifactManager.ShowChooseOne, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                     Value="True">
+                                            <Setter Property="Visibility"
+                                                    Value="Visible"/>
+                                            <Setter Property="ContentTemplate">
+                                                <Setter.Value>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <!-- Custom Component inside the Grid -->
+                                                            <local:ChooseOne
+                                                                ImagePath="{Binding DataContext.Game.UserControlledPlayer.PlayerArtifactManager.SelectedArtifact.EffectMercenaryType.ImagePathString, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                CropRect="{Binding DataContext.Game.UserControlledPlayer.PlayerArtifactManager.SelectedArtifact.EffectMercenaryType.CropRect, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                CommandFunction="{Binding DataContext.Game.UserControlledPlayer.PlayerArtifactManager.PlayArtifactWithChooseOneCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                CancelCommand="{Binding DataContext.Game.UserControlledPlayer.PlayerArtifactManager.CancelChoseOneCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Style>
+                        </ContentControl>
+
+                    </Canvas>
+                    <StackPanel Orientation="Vertical">
+                        <ItemsControl ItemsSource="{Binding DataContext.Game.PlayerManager.SelectedPlayer.PlayerArtifactManager.YourArtifacts, 
+                                        RelativeSource={RelativeSource AncestorType=Window}}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel HorizontalAlignment="Center"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="5">
+                                        <Grid Grid.Column="2"
+                                              Width="120">
+                                            <Viewbox Stretch="Uniform">
+                                                <StackPanel>
+                                                    <local:ArtifactTemplateInYourHand
+                                                        AlreadyPlayed="True"
+                                                        SelectCommand="{Binding DataContext.Game.UserControlledPlayer.PlayerArtifactManager.SelectArtifactCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        Artifact="{Binding}"/>
+
+                                                </StackPanel>
+                                            </Viewbox>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                    </StackPanel>
+                    <StackPanel>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding DataContext.Game.IsUserControlledPlayersTurn, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                       Value="True"/>
+                                            <Condition Binding="{Binding DataContext.Game.MiniPhaseManager.CurrentPhase.Name, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                       Value="{x:Static models:MiniPhaseType.ReplayArtifactMiniPhase}"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Visibility"
+                                                Value="Visible"/>
+                                    </MultiDataTrigger>
+
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <Button Content="RePlay Artifact"
+                                CommandParameter="{Binding DataContext.LobbyService, RelativeSource={RelativeSource AncestorType=Window}}"
+                                Command="{Binding DataContext.Game.UserControlledPlayer.PlayerArtifactManager.PlayArtifactCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                Margin="10,0,0,0">
+                            <Button.Style>
+                                <Style TargetType="Button"
+                                       BasedOn="{StaticResource StyledButton}">
+                                    <Setter Property="IsEnabled"
+                                            Value="False"/>
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding DataContext.Game.UserControlledPlayer.PlayerArtifactManager.SelectedArtifact, Converter={StaticResource isNullConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                           Value="False"/>
+                                                <Condition Binding="{Binding DataContext.Game.UserControlledPlayer.PlayerArtifactManager.SelectedArtifact.ArtifactPlayProperties.CanPlayCard, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                           Value="True"/>
+                                                <Condition Binding="{Binding DataContext.Game.UserControlledPlayer.PlayerArtifactManager.SelectedArtifact.EffectType, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                           Value="1"/>
+                                                <Condition Binding="{Binding DataContext.Game.UserControlledPlayer.PlayerArtifactManager.SelectedArtifact.Id, 
+                     Converter={StaticResource NotEqualConverter}, 
+                     ConverterParameter=24,
+                     RelativeSource={RelativeSource AncestorType=Window}}" 
+           Value="True"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="IsEnabled"
+                                                    Value="True"/>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Vertical"
+                            Grid.Row="2"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch">
+                    <StackPanel>
+                        <Border
+                            Background="DarkSlateGray"
+                            CornerRadius="10"
+                            Padding="10"
+                            Margin="5"
+                            BorderBrush="LightGray"
+                            BorderThickness="2">
+                            <TextBlock Text="Royal Cards"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       TextAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="Black"
+                                                      BlurRadius="5"
+                                                      ShadowDepth="2"
+                                                      Opacity="0.7"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <ItemsControl ItemsSource="{Binding DataContext.Game.PlayerManager.SelectedPlayer.PlayerRoyalCardManager.RolayCards, 
+                                        RelativeSource={RelativeSource AncestorType=Window}}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel HorizontalAlignment="Center"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="5">
+                                        <Grid Grid.Column="2"
+                                              Width="120">
+                                            <Viewbox Stretch="Uniform">
+                                                <StackPanel>
+                                                    <local:RolayCardTemplate
+                                                        IsYourCard="True"
+                                                        SelectCommand="{Binding DataContext.Game.RolayCardsManager.SelectRoyalCardCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        RolayCard="{Binding}"/>
+                                                </StackPanel>
+                                            </Viewbox>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                    </StackPanel>
+
+                </StackPanel>
+                <StackPanel Orientation="Vertical"
+                            Grid.Row="5"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch">
+                    <StackPanel>
+                        <Border
+                            Background="DarkSlateGray"
+                            CornerRadius="10"
+                            Padding="10"
+                            Margin="5"
+                            BorderBrush="LightGray"
+                            BorderThickness="2">
+                            <TextBlock Text="Tokens"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       TextAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="Black"
+                                                      BlurRadius="5"
+                                                      ShadowDepth="2"
+                                                      Opacity="0.7"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <ItemsControl ItemsSource="{Binding DataContext.Game.PlayerManager.SelectedPlayer.TokenManager.Tokens, 
+                                        RelativeSource={RelativeSource AncestorType=Window}}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel HorizontalAlignment="Center"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="5">
+                                        <Grid Grid.Column="2"
+                                              Width="80">
+                                            <Viewbox Stretch="Uniform">
+                                                <Grid>
+                                                    <Image Width="64"
+                                                           Height="64">
+                                                        <Image.ToolTip>
+                                                            <ToolTip Placement="Mouse"
+                                                                     HasDropShadow="True">
+                                                                <TextBlock>
+                                                            <Run Text="{Binding ToolTipText}"/>
+
+                                                                </TextBlock>
+                                                            </ToolTip>
+                                                        </Image.ToolTip>
+
+                                                        <Image.Source>
+                                                            <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                                                <Binding Path="DisplayInfo.CropRect"/>
+                                                                <Binding Path="DisplayInfo.ImagePathString"
+                                                                         Converter="{StaticResource StringToUriConverter}"/>
+                                                            </MultiBinding>
+                                                        </Image.Source>
+                                                        <Canvas.ZIndex>3</Canvas.ZIndex>
+                                                    </Image>
+                                                    <Image Width="65"
+                                                           Height="65">
+
+                                                        <Image.Source>
+                                                            <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                                                <Binding Path="."
+                                                                         Converter="{StaticResource HeroCropConverter}"
+                                                                         ConverterParameter="TokenBg"/>
+                                                                <Binding Path="."
+                                                                         Converter="{StaticResource HeroCropImageConverter}"
+                                                                         ConverterParameter="TokenBg"/>
+                                                            </MultiBinding>
+                                                        </Image.Source>
+                                                        <Canvas.ZIndex>2</Canvas.ZIndex>
+                                                    </Image>
+
+                                                </Grid>
+                                            </Viewbox>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                    </StackPanel>
+
+                </StackPanel>
+                <StackPanel Orientation="Vertical"
+                            Grid.Row="3"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch">
+                    <StackPanel>
+                        <Border
+                            Background="DarkSlateGray"
+                            CornerRadius="10"
+                            Padding="10"
+                            Margin="5"
+                            BorderBrush="LightGray"
+                            BorderThickness="2">
+                            <TextBlock Text="Auras"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       TextAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="Black"
+                                                      BlurRadius="5"
+                                                      ShadowDepth="2"
+                                                      Opacity="0.7"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <ItemsControl ItemsSource="{Binding DataContext.Game.PlayerManager.SelectedPlayer.PlayerAuraManager.AurasTypes, 
+                                        RelativeSource={RelativeSource AncestorType=Window}}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel HorizontalAlignment="Center"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="5">
+                                        <Grid Grid.Column="2"
+                                              Width="150">
+                                            <Viewbox Stretch="Uniform">
+                                                <Grid>
+                                                    <local:AuraTemplate
+                                                        Aura="{Binding}"/>
+                                                </Grid>
+                                            </Viewbox>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </DataTemplate>
+</ResourceDictionary>

@@ -1,0 +1,508 @@
+<UserControl x:Class="BoardGameFrontend.Windows.MercenaryTemplate"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:BoardGameFrontend.Windows"
+             xmlns:models="clr-namespace:BoardGameFrontend.Models"
+             xmlns:converters="clr-namespace:BoardGameFrontend.Converters">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="HeroStatTemplate.xaml"/>
+                <ResourceDictionary Source="ReqShower.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Converters -->
+            <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+            <converters:CroppedConverter x:Key="CroppedConverter"/>
+            <converters:StringToUriConverter x:Key="StringToUriConverter"/>
+            <converters:HeroCropConverter x:Key="HeroCropConverter"/>
+            <converters:HeroCropImageConverter x:Key="HeroCropImageConverter"/>
+            <converters:HeroWholeCropConverter x:Key="HeroWholeCropConverter"/>
+            <converters:HeroStatsConverter x:Key="HeroStatsConverter"/>
+            <converters:GoldAmountConverter x:Key="GoldAmountConverter"/>
+            <converters:GoldColorConverter x:Key="GoldColorConverter"/>
+            <converters:PlayerColorConverter x:Key="PlayerColorConverter"/>
+            <converters:ReqConverter x:Key="ReqConverter"/>
+            <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        </ResourceDictionary>
+
+    </UserControl.Resources>
+
+
+
+    <Grid VerticalAlignment="Stretch"
+          Width="260"
+          Height="336">
+        <Grid.Background>
+            <ImageBrush Stretch="Fill">
+                <ImageBrush.ImageSource>
+                    <MultiBinding Converter="{StaticResource CroppedConverter}">
+                        <Binding Path="Mercenary.CropRect"
+                                 RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                        <Binding Path="Mercenary.ImagePathString"
+                                 RelativeSource="{RelativeSource AncestorType=UserControl}"
+                                 Converter="{StaticResource StringToUriConverter}"/>
+                    </MultiBinding>
+                </ImageBrush.ImageSource>
+            </ImageBrush>
+        </Grid.Background>
+        <Grid.Style>
+            <Style TargetType="Grid">
+                <Setter Property="Opacity"
+                        Value="0.7"></Setter>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Mercenary.CanBuy, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                 Value="True">
+                        <Setter Property="Opacity"
+                                Value="1"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsYourCard, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                 Value="True">
+                        <Setter Property="Opacity"
+                                Value="1"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Style>
+        <Border 
+                Height="30"
+                Visibility="{Binding LockedByPlayerInfo, Converter={StaticResource NullToVisibilityConverter}}"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                Margin="0, 0,0,0"
+                Panel.ZIndex="1">
+            <Border.Background>
+                    <MultiBinding Converter="{StaticResource PlayerColorConverter}">
+                        <Binding Path="LockedByPlayerInfo.Id"/>
+                        <Binding Path="DataContext.LobbyVM"
+                                 RelativeSource="{RelativeSource AncestorType=Window}"/>
+                    </MultiBinding>
+                </Border.Background>
+            <TextBlock Text="{Binding LockedByPlayerInfo.PlayerName}"
+                       Foreground="White"
+                       FontWeight="Bold"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+        </Border>
+        <Image Width="260"
+               Height="336"
+               Source="pack://application:,,,/Assets/Borders/MercenaryBorder.png"/>
+
+        <Image Width="260"
+               Height="336"
+               Source="pack://application:,,,/Assets/Borders/SelectedBorder.png">
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Setter Property="Visibility"
+                            Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Mercenary.Selected, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                     Value="True">
+                            <Setter Property="Visibility"
+                                    Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+
+        <Button Command="{Binding SelectCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                CommandParameter="{Binding Mercenary.InGameIndex, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                Width="240"
+                Height="320"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch"
+                Background="Transparent"
+                Padding="4"
+                BorderBrush="Transparent">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background"
+                            Value="Green"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="Opacity"
+                                    Value="0.8"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+            <Grid HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  Margin="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+
+
+                <Grid Grid.Row="0">
+                    <StackPanel Orientation="Horizontal"
+                                Background="Black"
+                                Opacity="0.5"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"/>
+                    <Grid VerticalAlignment="Stretch"
+                          HorizontalAlignment="Stretch"
+                          Grid.RowSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="45"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Vertical"
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Stretch"
+                                    Grid.Column="0"
+                                    Panel.ZIndex="1">
+                            <!-- Ensuring content is in the front -->
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Value}"
+                                                     Value="0">
+                                            <Setter Property="Visibility"
+                                                    Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <ItemsControl Tag="45">
+                                <ItemsControl.ItemsSource>
+                                    <MultiBinding Converter="{StaticResource HeroStatsConverter}">
+                                        <Binding Path="Mercenary"
+                                                 RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                        <Binding Source="Siege,Magic,Army,IncomeGold,Morale,ScorePoints"/>
+                                    </MultiBinding>
+                                </ItemsControl.ItemsSource>
+
+                                <ItemsControl.ItemTemplate>
+                                    <StaticResource ResourceKey="HeroStatTemplate"/>
+                                </ItemsControl.ItemTemplate>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </StackPanel>
+
+                        <!-- Content in the second column -->
+                        <StackPanel Grid.Column="1"
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Center"
+                                    Panel.ZIndex="1">
+                            <!-- Ensuring content is in the front -->
+                            <StackPanel>
+                                <Image Width="45"
+                                       Height="45">
+                                    <Image.Source>
+                                        <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                            <Binding Path="TypeCardName.CropRect"/>
+                                            <Binding Path="TypeCardName.ImagePathString"
+                                                     Converter="{StaticResource StringToUriConverter}"/>
+                                        </MultiBinding>
+                                    </Image.Source>
+                                </Image>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Faction}"
+                                                         Value="{x:Null}">
+                                                <Setter Property="Visibility"
+                                                        Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+                                <Image Width="45"
+                                       Height="45">
+                                    <Image.Source>
+                                        <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                            <Binding Path="Faction.CropRect"/>
+                                            <Binding Path="Faction.ImagePathString"
+                                                     Converter="{StaticResource StringToUriConverter}"/>
+                                        </MultiBinding>
+                                    </Image.Source>
+                                </Image>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="1" VerticalAlignment="Bottom"
+                      Margin="0,3,0,3">
+                    <StackPanel>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility"
+                                        Value="Visible"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Mercenary.EffectType, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                 Value="{x:Null}">
+                                        <Setter Property="Visibility"
+                                                Value="Collapsed"/>
+
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+
+                        <Canvas Width="126"
+                                Height="126"
+                                
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Center">
+                            <Canvas.ToolTip>
+                                <ToolTip Placement="Mouse"
+                                         HasDropShadow="True">
+                                    <TextBlock>
+                                        <Run Text="{Binding ToolTipText}"/>
+                                    </TextBlock>
+                                </ToolTip>
+                            </Canvas.ToolTip>
+                            <!-- Background Container -->
+                            <Rectangle Width="126"
+                                       Height="126"
+                                       Fill="Black"
+                                       Opacity="0.5"
+                                       Canvas.ZIndex="1"/>
+                            <Rectangle Width="126"
+                                       Height="126"
+                                       Fill="Green"
+                                       Opacity="0.6"
+                                       Canvas.ZIndex="3">
+                                <Rectangle.Style>
+                                    <Style TargetType="Rectangle">
+                                        <Setter Property="Visibility"
+                                                Value="Collapsed"/>
+                                        <!-- Default state is collapsed -->
+                                        <Style.Triggers>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding ProphecyRequirementsFulfilled}"
+                                                               Value="True"/>
+                                                    <Condition Binding="{Binding IsAlwaysFulfilled}"
+                                                               Value="False"/>
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="Visibility"
+                                                        Value="Visible"/>
+                                            </MultiDataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Rectangle.Style>
+                            </Rectangle>
+                            <Rectangle Width="126"
+                                       Height="126"
+                                       Fill="Orange"
+                                       Opacity="0.6"
+                                       Canvas.ZIndex="3">
+                                <Rectangle.Style>
+                                    <Style TargetType="Rectangle">
+                                        <Setter Property="Visibility"
+                                                Value="Collapsed"/>
+                                        <!-- Default state is collapsed -->
+                                        <Style.Triggers>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding IsAlwaysFulfilled}"
+                                                               Value="True"/>
+
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="Visibility"
+                                                        Value="Visible"/>
+                                            </MultiDataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Rectangle.Style>
+                            </Rectangle>
+
+                            <Image Width="45"
+                                   Height="45"
+                                   Canvas.Left="0"
+                                   Canvas.Top="-20"
+                                   Canvas.ZIndex="3">
+                                <Image.Source>
+                                    <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                        <Binding Path="EffectTypeClass.CropRect"/>
+                                        <Binding Path="EffectTypeClass.ImagePathString"
+                                                 Converter="{StaticResource StringToUriConverter}"/>
+                                    </MultiBinding>
+                                </Image.Source>
+                            </Image>
+
+                            <Image Width="126"
+                                   Height="126"
+                                   Canvas.ZIndex="2"
+                                   Canvas.Left="0"
+                                   Canvas.Top="0">
+                                <Image.Source>
+                                    <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                        <Binding Path="EffectImage.CropRect"/>
+                                        <Binding Path="EffectImage.ImagePathString"
+                                                 Converter="{StaticResource StringToUriConverter}"/>
+                                    </MultiBinding>
+                                </Image.Source>
+                            </Image>
+
+                        </Canvas>
+                    </StackPanel>
+                </Grid>
+                <StackPanel HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Grid.Row="2">
+                    <Grid Margin="1, 10, 1, 1">
+                        <Border Background="Black"
+                                Opacity="0.5"
+                                CornerRadius="5"
+                                Padding="1"
+                                Margin="0"/>
+                        <TextBlock Text="{Binding Mercenary.NameEng, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                   FontSize="20"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Bold"
+                                   Foreground="White">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="White"
+                                                  BlurRadius="4"
+                                                  ShadowDepth="0"
+                                                  Opacity="1"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                    </Grid>
+                </StackPanel>
+                <Grid Grid.Row="3"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Bottom">
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsYourCard, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                             Value="True">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <StackPanel Orientation="Horizontal"
+                                Background="Black"
+                                Opacity="0.5"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"/>
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch">
+                        <Image Width="42"
+                               Height="42">
+                            <Image.Source>
+                                <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                    <Binding Path="."
+                                             Converter="{StaticResource HeroCropConverter}"
+                                             ConverterParameter="Locked"/>
+                                    <Binding Path="."
+                                             Converter="{StaticResource HeroCropImageConverter}"
+                                             ConverterParameter="Locked"/>
+                                </MultiBinding>
+                            </Image.Source>
+                        </Image>
+
+                        <ItemsControl ItemsSource="{Binding Mercenary.ResourcesNeeded, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Background="#80FFFFFF"
+                                                CornerRadius="5"
+                                                Padding="1"
+                                                Margin="1">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock FontSize="20"
+                                                           VerticalAlignment="Center"
+                                                           HorizontalAlignment="Center"
+                                                           FontWeight="Bold">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding Converter="{StaticResource GoldAmountConverter}">
+                                                            <Binding Path="."/>
+                                                            <Binding Path="DataContext"
+                                                                     RelativeSource="{RelativeSource AncestorType=ItemsControl}"/>
+                                                            <Binding Path="DataContext.AuraDiscount" RelativeSource="{RelativeSource AncestorType=ItemsControl}"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                    <TextBlock.Foreground>
+                                                        <MultiBinding Converter="{StaticResource GoldColorConverter}">
+                                                            <Binding Path="."/>
+                                                            <Binding Path="DataContext"
+                                                                     RelativeSource="{RelativeSource AncestorType=ItemsControl}"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Foreground>
+                                                </TextBlock>
+                                                <Image Width="42"
+                                                       HorizontalAlignment="Right"
+                                                       VerticalAlignment="Top"
+                                                       Margin="0,5,0,0"
+                                                       Height="42">
+                                                    <Image.Source>
+                                                        <MultiBinding Converter="{StaticResource HeroWholeCropConverter}">
+                                                            <Binding Path="Name"/>
+                                                        </MultiBinding>
+                                                    </Image.Source>
+                                                </Image>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <Grid HorizontalAlignment="Right"
+                              Visibility="{Binding Visible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Grid.DataContext>
+                                <Binding Path="."
+                                         Converter="{StaticResource ReqConverter}"/>
+                            </Grid.DataContext>
+                            <Image Width="42"
+                                   Height="42"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Top"
+                                   Margin="0,5,0,0">
+                                <Image.Source>
+                                    <MultiBinding Converter="{StaticResource HeroWholeCropConverter}">
+                                        <Binding Path="ImageKey"/>
+                                    </MultiBinding>
+                                </Image.Source>
+                            </Image>
+                            <TextBlock Text="{Binding Value}"
+                                       FontSize="20"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Top"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       Margin="0,0,0,0"/>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+
+            </Grid>
+        </Button>
+    </Grid>
+</UserControl>

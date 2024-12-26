@@ -1,0 +1,8 @@
+[{"Id" : 1, "NameEng" : "Gold", "NamePL" : "Złoto", "ImageAtlas" : "ATLAS_IKONKI_80_1", "ImageIndex" : 0, "ResetsOnTurn" : false},
+{"Id" : 2, "NameEng" : "Wood", "NamePL" : "Drewno", "ImageAtlas" : "ATLAS_IKONKI_1", "ImageIndex" : 11, "ResetsOnTurn" : true},
+{"Id" : 3, "NameEng" : "Iron", "NamePL" : "Żelazo", "ImageAtlas" : "ATLAS_IKONKI_1", "ImageIndex" : 10, "ResetsOnTurn" : true},
+{"Id" : 4, "NameEng" : "Gems", "NamePL" : "Klejnoty", "ImageAtlas" : "ATLAS_IKONKI_1", "ImageIndex" : 12, "ResetsOnTurn" : true},
+{"Id" : 5, "NameEng" : "Niter", "NamePL" : "Saletra", "ImageAtlas" : "ATLAS_IKONKI_1", "ImageIndex" : 9, "ResetsOnTurn" : true},
+{"Id" : 6, "NameEng" : "Mystic fog", "NamePL" : "Mistyczna mgła", "ImageAtlas" : "ATLAS_IKONKI_1", "ImageIndex" : 13, "ResetsOnTurn" : true},
+{"Id" : 7, "NameEng" : "Income", "NamePL" : "Przychód", "ImageAtlas" : "ATLAS_IKONKI_1", "ImageIndex" : 8, "ResetsOnTurn" : false},
+{"Id" : 8, "NameEng" : "Royal signet", "NamePL" : "Sygnet", "ImageAtlas" : "ATLAS_IKONKI_1", "ImageIndex" : 43, "ResetsOnTurn" : false}]

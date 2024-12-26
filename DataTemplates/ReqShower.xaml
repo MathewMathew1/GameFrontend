@@ -1,0 +1,48 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:BoardGameFrontend.Windows"
+                    xmlns:models="clr-namespace:BoardGameFrontend.Models"
+                    xmlns:converters="clr-namespace:BoardGameFrontend.Converters">
+    <converters:HeroWholeCropConverter x:Key="HeroWholeCropConverter"/>
+
+    <!-- DataTemplate for each HeroStat -->
+    <DataTemplate x:Key="ReqShower">
+        <StackPanel Orientation="Horizontal">
+            <StackPanel.Style>
+                <Style TargetType="StackPanel">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Value}"
+                                     Value="0">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
+
+            <Border 
+                    >
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Value}"
+                               FontSize="11"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               FontWeight="Bold"
+                               Foreground="White"/>
+                    <Image Width="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=Tag}"
+                           Height="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=Tag}"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Top"
+                           Margin="0,5,0,0">
+                        <Image.Source>
+                            <MultiBinding Converter="{StaticResource HeroWholeCropConverter}">
+                                <Binding Path="ImageKey"/>
+                            </MultiBinding>
+                        </Image.Source>
+                    </Image>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+    </DataTemplate>
+</ResourceDictionary>

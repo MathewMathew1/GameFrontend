@@ -1,0 +1,13 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Define the DataTemplate for Resource Display -->
+    <DataTemplate x:Key="TileTemplate">
+        <Image Width="50"
+               Height="50"
+               Canvas.Left="333"
+               Canvas.Top="233"
+               Source="pack://application:,,,/Assets/Resources/Gem.png"/>
+    </DataTemplate>
+</ResourceDictionary>
+
+

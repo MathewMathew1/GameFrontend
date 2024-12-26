@@ -1,0 +1,486 @@
+<UserControl x:Name="ParentControl"
+             x:Class="BoardGameFrontend.Windows.RolayCardTemplate"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:BoardGameFrontend.Windows"
+             xmlns:models="clr-namespace:BoardGameFrontend.Models"
+             xmlns:converters="clr-namespace:BoardGameFrontend.Converters">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="HeroStatTemplate2.xaml"/>
+                <ResourceDictionary Source="HeroStatTemplate.xaml"/>
+                <ResourceDictionary Source="ReqShower.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate x:Key="HeroToolTipTemplate">
+                <TextBlock Text="{Binding RolayCard.EffectToolTip, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+            </DataTemplate>
+            <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+            <converters:CroppedConverter x:Key="CroppedConverter"/>
+            <converters:StringToUriConverter x:Key="StringToUriConverter"/>
+            <converters:HeroCropConverter x:Key="HeroCropConverter"/>
+            <converters:HeroCropImageConverter x:Key="HeroCropImageConverter"/>
+            <converters:HeroWholeCropConverter x:Key="HeroWholeCropConverter"/>
+            <converters:HeroStatsConverter x:Key="HeroStatsConverter"/>
+            <converters:GoldAmountConverter x:Key="GoldAmountConverter"/>
+            <converters:GoldColorConverter x:Key="GoldColorConverter"/>
+            <converters:ReqConverter x:Key="ReqConverter"/>
+            <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+            <converters:IsNullConverter x:Key="isNullConverter"/>
+            <converters:PlayerColorConverter x:Key="PlayerColorConverter"/>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        </ResourceDictionary>
+
+    </UserControl.Resources>
+
+    <Grid VerticalAlignment="Stretch"
+          Width="254"
+          Height="332"
+          HorizontalAlignment="Stretch">
+        <Grid.Background>
+            <ImageBrush Stretch="Fill">
+                <ImageBrush.ImageSource>
+                    <MultiBinding Converter="{StaticResource CroppedConverter}">
+                        <Binding Path="RolayCard.DisplayInfo.CropRect"
+                                 RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                        <Binding Path="RolayCard.DisplayInfo.ImagePathString"
+                                 RelativeSource="{RelativeSource AncestorType=UserControl}"
+                                 Converter="{StaticResource StringToUriConverter}"/>
+                    </MultiBinding>
+                </ImageBrush.ImageSource>
+            </ImageBrush>
+        </Grid.Background>
+        <Grid.Style>
+            <Style TargetType="Grid">
+                <Setter Property="Opacity"
+                        Value="0.7"></Setter>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RolayCard.PickedByPlayer, Converter={StaticResource isNullConverter}, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                 Value="True">
+                        <Setter Property="Opacity"
+                                Value="1"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsYourCard, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                 Value="True">
+                        <Setter Property="Opacity"
+                                Value="1"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding RolayCard.BanishedCard, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                 Value="True">
+                        <Setter Property="Opacity"
+                                Value="0.7"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Style>
+        <Image Width="254"
+               Height="332"
+               Source="pack://application:,,,/Assets/Borders/FrameRoyaltyCard.png"/>
+
+        <Image Width="254"
+               Height="332"
+               Source="pack://application:,,,/Assets/Borders/SelectedBorder.png">
+            <Image.Style>
+                <Style TargetType="Image">
+                    <Setter Property="Visibility"
+                            Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RolayCard.Selected, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                     Value="True">
+                            <Setter Property="Visibility"
+                                    Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+        <Border 
+                Height="30"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                Margin="0, 0,0,0"
+                Panel.ZIndex="1">
+            <Border.Background>
+                <MultiBinding Converter="{StaticResource PlayerColorConverter}">
+                    <Binding Path="RolayCard.PickedByPlayer.Id" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                    <Binding Path="DataContext.LobbyVM"
+                            RelativeSource="{RelativeSource AncestorType=Window}"/>
+                </MultiBinding>
+            </Border.Background>
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Visibility"
+                            Value="Collapsed"/>
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding RolayCard.PickedByPlayer, Converter={StaticResource isNullConverter}, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                           Value="False"/>
+                                <Condition Binding="{Binding IsYourCard, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                           Value="False"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Visibility"
+                                    Value="Visible"/>
+                        </MultiDataTrigger>
+
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <TextBlock Text="{Binding RolayCard.PickedByPlayer.Name, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Foreground="White"
+                       FontWeight="Bold"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+        </Border>
+        <Border Background="Black"
+                Height="30"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                Margin="0, 0,0,0"
+                Panel.ZIndex="1">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Visibility"
+                            Value="Collapsed"/>
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding RolayCard.BanishedCard, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                           Value="True"/>
+
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Visibility"
+                                    Value="Visible"/>
+                        </MultiDataTrigger>
+
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <TextBlock Text="Banished"
+                       Foreground="White"
+                       FontWeight="Bold"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+        </Border>
+        <Button Command="{Binding SelectCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                CommandParameter="{Binding RolayCard.Id, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                Width="240"
+                Height="320"
+                HorizontalContentAlignment="Stretch"
+                VerticalContentAlignment="Stretch"
+                Background="Transparent"
+                Padding="4"
+                BorderBrush="Transparent">
+
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background"
+                            Value="Green"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="Opacity"
+                                    Value="0.8"/>
+                        </Trigger>
+
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding RolayCard.EffectToolTip, Converter={StaticResource isNullConverter}, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                           Value="False"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="ToolTip">
+                                <Setter.Value>
+                                    <ToolTip Placement="Mouse"
+                                             HasDropShadow="True"
+                                             ContentTemplate="{StaticResource HeroToolTipTemplate}"/>
+                                </Setter.Value>
+                            </Setter>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+
+            <Grid HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  Margin="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+
+
+                <Grid Grid.Row="0">
+                    <StackPanel Orientation="Horizontal"
+                                Background="Black"
+                                Opacity="0.5"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"/>
+                    <DockPanel LastChildFill="True">
+
+
+                        <StackPanel Grid.Column="0"
+                                    x:Name="LeftPanel"
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Center"
+                                    Panel.ZIndex="1">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="DockPanel.Dock"
+                                            Value="Right"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding LeftToRight, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                     Value="True">
+                                            <Setter Property="DockPanel.Dock"
+                                                    Value="Left"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Width="64"
+                                       Height="64">
+                                    <Image.Source>
+                                        <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                            <Binding Path="."
+                                                     Converter="{StaticResource HeroCropConverter}"
+                                                     ConverterParameter="RoyalCardIcon"/>
+                                            <Binding Path="."
+                                                     Converter="{StaticResource HeroCropImageConverter}"
+                                                     ConverterParameter="RoyalCardIcon"/>
+                                        </MultiBinding>
+                                    </Image.Source>
+                                </Image>
+                                <Image Width="64"
+                                       Height="64">
+                                    <Image.Source>
+                                        <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                            <Binding Path="RolayCard.Faction.CropRect"
+                                                     RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                            <Binding Path="RolayCard.Faction.ImagePathString"
+                                                     RelativeSource="{RelativeSource AncestorType=UserControl}"
+                                                     Converter="{StaticResource StringToUriConverter}"/>
+                                        </MultiBinding>
+                                    </Image.Source>
+                                </Image>
+                            </StackPanel>
+                       
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical"
+                                    DockPanel.Dock="Right"
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Stretch"
+                                    Grid.Column="1"
+                                    x:Name="RightContent"
+                                    Panel.ZIndex="1">
+                            <!-- Ensuring content is in the front -->
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Value}"
+                                                     Value="0">
+                                            <Setter Property="Visibility"
+                                                    Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <ItemsControl Tag="45">
+                                <ItemsControl.ItemsSource>
+                                    <MultiBinding Converter="{StaticResource HeroStatsConverter}">
+                                        <Binding Path="RolayCard"
+                                                 RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                        <Binding Source="Siege,Magic,Army,IncomeGold,Morale,ScorePoints"/>
+                                    </MultiBinding>
+                                </ItemsControl.ItemsSource>
+
+                                <ItemsControl.ItemTemplate>
+                                    <StaticResource ResourceKey="HeroStatTemplate"/>
+                                </ItemsControl.ItemTemplate>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </StackPanel>
+
+                        <!-- Content in the second column -->
+
+                    </DockPanel>
+                </Grid>
+                <Grid Grid.Row="1"
+                      Margin="0,10,0,0">
+                    <StackPanel>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding RolayCard.TypeCard, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                 Value="3">
+                                        <Setter Property="Visibility"
+                                                Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+
+                        <Canvas Width="150"
+                                Height="150"
+                                Margin="0,0,0,10"
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Center">
+
+                            <!-- Background Container -->
+                            <Rectangle Width="150"
+                                       Height="150"
+                                       Fill="Black"
+                                       Opacity="0.5"
+                                       Canvas.ZIndex="1"/>
+                            <Rectangle Width="150"
+                                       Height="150"
+                                       Fill="Green"
+                                       Opacity="0.6"
+                                       Canvas.ZIndex="3">
+
+                            </Rectangle>
+
+                            <Image Width="45"
+                                   Height="45"
+                                   Canvas.Left="0"
+                                   Canvas.Top="-20"
+                                   Canvas.ZIndex="3">
+                                <Image.Source>
+                                    <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                        <Binding Path="RolayCard.EffectTypeClass.CropRect"
+                                                 RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                        <Binding Path="RolayCard.EffectTypeClass.ImagePathString"
+                                                 RelativeSource="{RelativeSource AncestorType=UserControl}"
+                                                 Converter="{StaticResource StringToUriConverter}"/>
+                                    </MultiBinding>
+                                </Image.Source>
+                            </Image>
+
+                            <Image Width="150"
+                                   Height="150"
+                                   Canvas.ZIndex="2"
+                                   Canvas.Left="0"
+                                   Canvas.Top="0">
+                                <Image.Source>
+                                    <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                        <Binding Path="RolayCard.EffectImage.CropRect"
+                                                 RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                        <Binding Path="RolayCard.EffectImage.ImagePathString"
+                                                 RelativeSource="{RelativeSource AncestorType=UserControl}"
+                                                 Converter="{StaticResource StringToUriConverter}"/>
+                                    </MultiBinding>
+                                </Image.Source>
+                            </Image>
+
+                        </Canvas>
+                    </StackPanel>
+                </Grid>
+                <StackPanel Grid.Row="2">
+                    <Canvas Width="156"
+                            Height="156"
+                            Margin="0,0,0,10"
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Center">
+                        <Canvas.Style>
+                            <Style TargetType="Canvas">
+                                <Setter Property="Visibility"
+                                        Value="Visible"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding RolayCard.EffectCard, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                 Value="{x:Null}">
+                                        <Setter Property="Visibility"
+                                                Value="Collapsed"/>
+
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Canvas.Style>
+
+                        <!-- Background Container -->
+                        <Rectangle Width="156"
+                                   Height="156"
+                                   Fill="Black"
+                                   Opacity="0.5"
+                                   Canvas.ZIndex="1"/>
+
+                        <Image Width="45"
+                               Height="45"
+                               Canvas.Left="0"
+                               Canvas.Top="-20"
+                               Canvas.ZIndex="3">
+                            <Image.Source>
+                                <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                    <Binding Path="RolayCard.EffectType.CropRect"
+                                             RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                    <Binding Path="RolayCard.EffectType.ImagePathString"
+                                             RelativeSource="{RelativeSource AncestorType=UserControl}"
+                                             Converter="{StaticResource StringToUriConverter}"/>
+                                </MultiBinding>
+                            </Image.Source>
+                        </Image>
+
+                        <Image Width="156"
+                               Height="156"
+                               Canvas.ZIndex="2"
+                               Canvas.Left="0"
+                               Canvas.Top="0">
+                            <Image.Source>
+                                <MultiBinding Converter="{StaticResource CroppedConverter}">
+                                    <Binding Path="RolayCard.EffectCard.CropRect"
+                                             RelativeSource="{RelativeSource AncestorType=UserControl}"/>
+                                    <Binding Path="RolayCard.EffectCard.ImagePathString"
+                                             RelativeSource="{RelativeSource AncestorType=UserControl}"
+                                             Converter="{StaticResource StringToUriConverter}"/>
+                                </MultiBinding>
+                            </Image.Source>
+                        </Image>
+
+                    </Canvas>
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Stretch"
+                            VerticalAlignment="Bottom"
+                            Grid.Row="3">
+                    <Grid Margin="1, 10, 1, 1">
+                        <Border Background="Black"
+                                Opacity="0.5"
+                                CornerRadius="5"
+                                Padding="1"
+                                Margin="0"/>
+                        <TextBlock Text="{Binding RolayCard.Type, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                   FontSize="20"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Bold"
+                                   Foreground="White">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="White"
+                                                  BlurRadius="4"
+                                                  ShadowDepth="0"
+                                                  Opacity="1"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </Button>
+    </Grid>
+
+</UserControl>

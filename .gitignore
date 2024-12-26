@@ -1,0 +1,9 @@
+bin/
+obj/
+*.csproj.user
+*.vscode/
+.dockerignore
+Dockerfile
+/Pdfs
+/Assets
+/Music
